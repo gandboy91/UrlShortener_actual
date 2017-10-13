@@ -1,17 +1,6 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-//minUrl 
+// URL-shortener  begin
 Route::get('/', ['as' => 'minUrl/main', 'uses' =>'minUrlController@minUrl']);
 Route::get('mytest','minUrlController@mytest');
 Route::post( 'minUrl/new','minUrlController@addUrl');
@@ -37,7 +26,7 @@ Route::get('/{slug}', function ($slug = null) {
 		}
 		return redirect()->route('minUrl/main')->with('msg',$msg);
 });
-
+// URL-shortener  end
 //stc
 Route::get('testspeed', 'testspeed@testspeed');
 Route::get('stc/', 'stcController@index');
