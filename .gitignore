@@ -1,0 +1,7 @@
+# CakePHP 3
+
+/vendor/*
+/config/app.php
+/config/database.php
+/vendor/*
+/storage/*
