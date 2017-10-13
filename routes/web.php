@@ -1,30 +1,40 @@
 <?php
 
 // URL-shortener  begin
+
+// запрос на главную страницу
 Route::get('/', ['as' => 'minUrl/main', 'uses' =>'minUrlController@minUrl']);
-Route::get('mytest','minUrlController@mytest');
+// ajax запрос на добавление url и генерацию slug
 Route::post( 'minUrl/new','minUrlController@addUrl');
+// запрос страницы по slug
 Route::get('/{slug}', function ($slug = null) {
 	if($slug){
 		$slug = trim($slug);
 		$msg = '';
-		$res = App\UrlStorage::where('slug', '=', $slug)->take(1);
-		if ($res->exists())
+		//проверяем slug - принимаем только латиницу + цифры
+		$validator = Validator::make(['slug'=>$slug], ['slug' => 'alpha_num']);
+		if ($validator->fails()) {
+			$msg = 'Недопустимые символы в кратком url';		
+		}
+			else
+		{
+			//если проверка по символам прошла выбираем из БД нужный url
+			$res = App\UrlStorage::where('slug', '=', $slug)->take(1);
+			if ($res->exists())
 		    {
-				$validator = Validator::make(['slug'=>$slug], ['slug' => 'alpha_num']);
-				if ($validator->fails()) {
-					$msg = 'Недопустимые символы в кратком url';		
-				} else {
-					$finUrl = $res->first()->url;
-					return redirect($finUrl); 
-				}
+				$finUrl = $res->first()->url;
+				//перенаправляем
+				return redirect($finUrl); 
 			}
 			else
 			{
 				$msg = 'Не найдено соответствия для этого краткого url.';
 			}
 		}
-		return redirect()->route('minUrl/main')->with('msg',$msg);
+		
+	}
+	//возвращаем на главную с сообщением об ошибке
+	return redirect()->route('minUrl/main')->with('msg',$msg);
 });
 // URL-shortener  end
 //stc
