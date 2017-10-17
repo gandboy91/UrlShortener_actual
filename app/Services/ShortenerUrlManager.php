@@ -46,11 +46,12 @@ class ShortenerUrlManager implements UrlStorageManager
     {
         $StatusCode = '';
         $LongUrl = $this->requestData->LongUrl;
+        //Проверка url на существование
         $UrlValidator = Validator::make(['LongUrl'=>$LongUrl], ['LongUrl' => 'url|active_url']);
         if ($UrlValidator->fails()) {
             $StatusCode = 'UrlNotActive';        
         } else {
-                //checking if url is correct
+                //Проверка url на корректность
                 if (filter_var($LongUrl, FILTER_VALIDATE_URL) 
                 && UrlChecker::CheckUrl($LongUrl,$allowedUrlLength)) {
                     $LongUrl = filter_var($LongUrl, FILTER_SANITIZE_URL); 

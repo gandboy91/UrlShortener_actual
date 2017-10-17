@@ -22,6 +22,7 @@ class UrlShortenerController extends Controller
   	if($request->slug) {
   		$message = $errorCode = '';
 		$slug = trim($request->slug);
+		//допускает только a-z и 0-9 символы
 		$validator = Validator::make(['slug'=>$slug], ['slug' => 'alpha_num']);
 		if ($validator->fails()) {
 			$errorCode = 'IncorrectSlugChars';		
@@ -51,6 +52,7 @@ class UrlShortenerController extends Controller
 	if ($ValidationStatus === 'ok') {
 		$SanitizedUrl = $UrlManager->getSanitizedUrl();
 		$IdOfUrl = $UrlManager->findIdByUrl($SanitizedUrl);
+		//0 если url не найден
 		if ($IdOfUrl!==0) {
 			$hash = UrlHasher::IdToHash($IdOfUrl);
 		} else {

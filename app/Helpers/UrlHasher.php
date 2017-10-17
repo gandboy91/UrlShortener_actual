@@ -4,7 +4,7 @@ namespace app\Helpers;
 
 class UrlHasher
 {
-    private static $hasher = null;
+    //base58
     private static $baseChars = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
 
     public static function IdToHash($int)
