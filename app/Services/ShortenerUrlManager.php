@@ -36,7 +36,7 @@ class ShortenerUrlManager implements UrlStorageManager
         return $UrlId;
     }
 
-    public function saveUrl($url)
+    public function SaveUrlAndReturnId($url)
     {
         $UrlRow = UrlStorage::create(['url' => $url,'tstamp' => time()]);
         return $UrlRow->id;

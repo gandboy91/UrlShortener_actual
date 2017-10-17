@@ -35,7 +35,7 @@ class UrlShortenerController extends Controller
 			}
 		}
 		if ($errorCode)
-			$message .= $this->ErrorTypes[$errorCode];
+			$message .= $this->ErrorTypes[$errorCod];
 		return redirect()->route('UrlShortener/main')->with('message',$message);
   	} else {
   		return view('UrlShortener.main');

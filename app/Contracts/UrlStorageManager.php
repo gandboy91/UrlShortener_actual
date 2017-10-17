@@ -8,5 +8,5 @@ interface UrlStorageManager
 
     public static function findUrlById($id);
     
-    public function saveUrl($url);
+    public function SaveUrlAndReturnId($url);
 }
