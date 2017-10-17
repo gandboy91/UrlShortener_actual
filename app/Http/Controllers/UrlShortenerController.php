@@ -54,7 +54,7 @@ class UrlShortenerController extends Controller
 		if ($IdOfUrl!==0) {
 			$hash = UrlHasher::IdToHash($IdOfUrl);
 		} else {
-			if ($newUrlId = $UrlManager->saveUrl($SanitizedUrl))
+			if ($newUrlId = $UrlManager->SaveUrlAndReturnId($SanitizedUrl))
 				$hash = UrlHasher::IdToHash($newUrlId);
 			else 
 				$errorCode = 'DbWriteError';	
