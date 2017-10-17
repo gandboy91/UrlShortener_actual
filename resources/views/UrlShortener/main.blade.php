@@ -34,19 +34,17 @@
 	<div class="col-sm-8">
 	<h1 style="margin-bottom:40px;">my URL-shortener</h1>
 	<div class="row" style="height:40px;">
-    @if (session('msg'))
-	<p class="msg">{{ session('msg') }}</p>
+    @if (session('message'))
+	<p class="msg">{{ session('message') }}</p>
 	@endif
     </div>
 	<div class="row">
-		<div class="col-sm-5"><b>Введите оригинальный URL с указанием протокола (например&nbsp;http://&nbsp;или&nbsp;https://)</b></div> 
-		<div class="col-sm-7">{{Form::text('LongUrl','',array('id'=>'lUrl','style'=>'width:100%;'))}}</div> 
-	</div>
-	<div class="row" style="margin-top:20px;">
-		<div class="col-sm-5"><b>До какого количества символов вы хотите укоротить url? (не считая домена):</b></div>	
-		<div class="col-sm-2">
-		{{ Form::selectRange('',3,12,8,array('id'=>'urLen') ) }}
-		</div>
+		<div class="col-sm-10"><b>Введите оригинальный URL с указанием протокола (например&nbsp;http://&nbsp;или&nbsp;https://)</b></div> 
+		<div class="col-sm-2"></div> 
+	</div><br/>
+	<div class="row">
+		<div class="col-sm-10">{{Form::text('LongUrl','',array('id'=>'lUrl','style'=>'width:100%;'))}}</div> 
+		<div class="col-sm-2"></div>
 	</div>
 	<div class="row" style="margin-top:20px;">
 	<div class="col-sm-5">{{Form::text('','',array('id'=>'resUrl','disabled','style'=>'width:100%'))}}

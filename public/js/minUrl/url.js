@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	 ResUrl.disabled = true;
 	 ShrtBtn.onclick = function(e){ 
 	 	e.preventDefault();
+	 	ResUrl.value = '';
 		lUrl = lUrlForm.value;
 		if(lUrl.length===0){
 	 		alert('Введите URL!'); return 0;
@@ -21,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function(){
 			alert('некорректный URL! проверьте протокол (http:// или https://) и домен (недопустимые символы).'); return 0;
 		}
 		AjaxData['lUrl'] = ""+urlParts[0];
-		AjaxData['len'] = +UrLenSelect.value;
 		AjaxData['csrft'] = ""+crsfToken;
 		myAjax(AjaxData);
 		
@@ -34,7 +34,7 @@ function myAjax(data)
 	 var ResMsg = document.getElementById('ResMsg');
 	 var warnOk = '<span style="color:green"><b>Успешно!</b></span>';
 	 var warnErr = '';
-	 var PostQ = "lUrl=" + encodeURIComponent(data['lUrl']) + "&len=" + encodeURIComponent(data['len']);
+	 var PostQ = "LongUrl=" + encodeURIComponent(data['lUrl']);
 	 var request = new XMLHttpRequest();
 	 request.open('POST', 'minUrl/new', true);
 	 request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -44,18 +44,15 @@ function myAjax(data)
      if(request.readyState === 4){ 
 		   if(request.status === 200) { 			  
 			  Resp = JSON.parse(request.responseText);
-			  if(+Resp['success']===1)
+			  if(Resp['status']==='ok')
 			  {
 			  	ResMsg.innerHTML = warnOk;
 			  	ResUrl.disabled = false;
-			  	ResUrl.value = Resp['slug'];
+			  	ResUrl.value = Resp['shortUrl'];
 			  }
 			  else
 			  {
-				warnErr = '<span style="color:red"><b>'+ Resp['err'] +'!</b></span>';
-				if (+Resp['duplSlug']!==0){
-				warnErr += '<br \><span style="color:green"><b>короткая ссылка для него: '+ Resp['duplSlug'] +'</b></span>';	
-				}
+				warnErr = '<span style="color:red"><b>'+ Resp['status'] +'!</b></span>';
 				ResMsg.innerHTML = warnErr;
 			  	ResUrl.value = '';	
 			  	ResUrl.disabled = true;

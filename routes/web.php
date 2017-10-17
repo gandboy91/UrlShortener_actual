@@ -1,42 +1,10 @@
 <?php
 
 // URL-shortener  begin
+Route::get('/', ['as' => 'UrlShortener/main', 'uses' =>'UrlShortenerController@main']);
+Route::post('minUrl/new','UrlShortenerController@addUrl');
+Route::get('/{slug}', 'UrlShortenerController@main');
 
-// запрос на главную страницу
-Route::get('/', ['as' => 'minUrl/main', 'uses' =>'minUrlController@minUrl']);
-// ajax запрос на добавление url и генерацию slug
-Route::post( 'minUrl/new','minUrlController@addUrl');
-// запрос страницы по slug
-Route::get('/{slug}', function ($slug = null) {
-	if($slug){
-		$slug = trim($slug);
-		$msg = '';
-		//проверяем slug - принимаем только латиницу + цифры
-		$validator = Validator::make(['slug'=>$slug], ['slug' => 'alpha_num']);
-		if ($validator->fails()) {
-			$msg = 'Недопустимые символы в кратком url';		
-		}
-			else
-		{
-			//если проверка по символам прошла выбираем из БД нужный url
-			$res = App\UrlStorage::where('slug', '=', $slug)->take(1);
-			if ($res->exists())
-		    {
-				$finUrl = $res->first()->url;
-				//перенаправляем
-				return redirect($finUrl); 
-			}
-			else
-			{
-				$msg = 'Не найдено соответствия для этого краткого url.';
-			}
-		}
-		
-	}
-	//возвращаем на главную с сообщением об ошибке
-	return redirect()->route('minUrl/main')->with('msg',$msg);
-});
-// URL-shortener  end
 //stc
 Route::get('testspeed', 'testspeed@testspeed');
 Route::get('stc/', 'stcController@index');
