@@ -13,25 +13,29 @@ class UrlShortenerController extends Controller
   private $AllowedUrlLength = 5000;
   private $ErrorTypes = [ 'UrlNotActive'=>'указанный адрес не является активным url',
 						  'DbWriteError'=>'Не удалось записать url в БД',
-						  'IncorrectUrl'=>'Некорректный url' ];
+						  'IncorrectUrl'=>'Некорректный url',
+						  'IncorrectSlugChars'=>'Недопустимые символы в кратком url',
+						  'SlugNotExist'=>'Не найдено соответствия для этого краткого url' ];
 
   public function main(Request $request)
   {
   	if($request->slug) {
-  		$message = '';
+  		$message = $errorCode = '';
 		$slug = trim($request->slug);
 		$validator = Validator::make(['slug'=>$slug], ['slug' => 'alpha_num']);
 		if ($validator->fails()) {
-			$message = 'Недопустимые символы в кратком url';		
+			$errorCode = 'IncorrectSlugChars';		
 		} else {
 			$IdOfUrl = UrlHasher::HashToId($slug); 
 			$LongUrl = ShortenerUrlManager::findUrlById($IdOfUrl);
 			if ($LongUrl) {
 				return redirect($LongUrl); 
 			} else {
-				$message = 'Не найдено соответствия для этого краткого url.';
+				$errorCode = 'SlugNotExist';
 			}
 		}
+		if ($errorCode)
+			$message .= $this->ErrorTypes[$errorCode];
 		return redirect()->route('UrlShortener/main')->with('message',$message);
   	} else {
   		return view('UrlShortener.main');
