@@ -59,4 +59,4 @@ class UrlShortenerController extends Controller
         $message = UrlChecker::getErrorDescription($statusCode);
         return redirect()->route('UrlShortener/main')->with('message',$message);
     }
-}
+};	
