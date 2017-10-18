@@ -23,6 +23,6 @@ class UrlCheckerProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path().'/Helpers/UrlChecker.php';
+        require_once app_path().'/Validators/UrlChecker.php';
     }
 }

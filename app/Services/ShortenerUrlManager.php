@@ -5,13 +5,14 @@ namespace App\Services;
 use App\Contracts\UrlStorageManager;
 use App\Models\UrlStorage;
 use Illuminate\Http\Request;
-use App\Helpers\UrlChecker;
+use App\Validators\UrlChecker;
 use Validator;
 
 class ShortenerUrlManager implements UrlStorageManager 
 {
     private $requestData;
-    private $SanitizedUrl;
+    private $sanitizedUrl;
+    private $allowedUrlLength = 5000;
 
     public function __construct(Request $request)
     {
@@ -20,54 +21,55 @@ class ShortenerUrlManager implements UrlStorageManager
 
     public static function findUrlById($id)
     {
-        $Url = '';
-        $UrlRow = UrlStorage::find($id);
-        if ($UrlRow)
-            $Url = $UrlRow->url;
-        return $Url;
+        $url = '';
+        $urlRow = UrlStorage::find($id);
+        if ($urlRow)
+            $url = $urlRow->url;
+        return $url;
     }
         
     public function findIdByUrl($url)
     {
-        $UrlId = 0;
-        $UrlRow = UrlStorage::where('url', '=', $url)->take(1);
-        if ($UrlRow->exists())
-            $UrlId = $UrlRow->first()->id;
-        return $UrlId;
+        $urlId = 0;
+        $urlRow = UrlStorage::where('url', '=', $url)->take(1);
+        if ($urlRow->exists())
+            $urlId = $urlRow->first()->id;
+        return $urlId;
     }
 
-    public function SaveUrlAndReturnId($url)
+    public function saveUrlAndReturnId($url)
     {
-        $UrlRow = UrlStorage::create(['url' => $url,'tstamp' => time()]);
-        return $UrlRow->id;
+        $urlRow = UrlStorage::create(['url' => $url,'tstamp' => time()]);
+        return $urlRow->id;
     }
 
-    public function validate($allowedUrlLength)
+    public function validateUrl()
     {
-        $StatusCode = '';
-        $LongUrl = $this->requestData->LongUrl;
-        //Проверка url на существование
-        $UrlValidator = Validator::make(['LongUrl'=>$LongUrl], ['LongUrl' => 'url|active_url']);
-        if ($UrlValidator->fails()) {
-            $StatusCode = 'UrlNotActive';        
+        // error codes
+        // 200 OK
+        // 400 Incorrect url 
+        // 410 Not active url
+        $statusCode = 200;
+        $longUrl = $this->requestData->longUrl;
+        $urlValidator = Validator::make(['longUrl'=>$longUrl], ['longUrl' => 'url|active_url']);
+        if ($urlValidator->fails()) {
+            $statusCode = 410;        
         } else {
-                //Проверка url на корректность
-                if (filter_var($LongUrl, FILTER_VALIDATE_URL) 
-                && UrlChecker::CheckUrl($LongUrl,$allowedUrlLength)) {
-                    $LongUrl = filter_var($LongUrl, FILTER_SANITIZE_URL); 
-                    if (mb_substr($LongUrl,-1)=='/')
-                    $LongUrl = mb_substr($LongUrl,0,-1);
-                    $StatusCode = 'ok'; 
-                    $this->SanitizedUrl = $LongUrl; 
-                } else {
-                    $StatusCode = 'IncorrectUrl';   
-                }
+            if (filter_var($longUrl, FILTER_VALIDATE_URL) 
+            && UrlChecker::checkUrl($longUrl,$this->allowedUrlLength)) {
+                $longUrl = filter_var($longUrl, FILTER_SANITIZE_URL); 
+                if (mb_substr($longUrl,-1)=='/')
+                    $longUrl = mb_substr($longUrl,0,-1); 
+                $this->sanitizedUrl = $longUrl; 
+            } else {
+                $statusCode = 400;   
+            }
         }
-        return $StatusCode; 
+        return $statusCode; 
     }
 
     public function getSanitizedUrl()
     {
-        return $this->SanitizedUrl; 
+        return $this->sanitizedUrl; 
     }
 }

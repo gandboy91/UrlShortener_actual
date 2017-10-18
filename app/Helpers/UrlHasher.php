@@ -7,7 +7,7 @@ class UrlHasher
     //base58
     private static $baseChars = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
 
-    public static function IdToHash($int)
+    public static function idToHash($int)
     {
         $hash = "";
         $int = intval($int);
@@ -23,7 +23,7 @@ class UrlHasher
         return $hash; 
     }
 
-    public static function HashToId($hash)
+    public static function hashToId($hash)
     {
         $int = 0;
         $base=strlen(self::$baseChars);
