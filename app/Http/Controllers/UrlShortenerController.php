@@ -9,15 +9,29 @@ use App\Services\ShortenerUrlManager;
 use Illuminate\Http\Request;
 use Validator;
 
+/**
+ * Class UrlShortenerController
+ * @package App\Http\Controllers
+ */
 class UrlShortenerController extends Controller
 {
+    /**
+     * returns main page or redirects to url using slug
+     * @param Request $request 
+     * @return \Illuminate\View\View|\Illuminate\Routing\Redirector 
+     */
     public function main(Request $request)
     {
         if ($slug = $request->slug)
-            return $this->redirectBySlug($slug);
+            return $this->redirectBySlug(''.$slug);
         return view('UrlShortener.main');
     }
 
+    /**
+     * Adding new url to DB and returns slug for it
+     * @param ShortenerUrlManager $UrlManager 
+     * @return string - responce in json
+     */
     public function addUrl(ShortenerUrlManager $UrlManager)
     {
         $responce = array();
@@ -44,6 +58,11 @@ class UrlShortenerController extends Controller
         return json_encode($responce);
     }
 
+    /**
+     * returns redirector to url found by slug 
+     * @param string $slug 
+     * @return \Illuminate\Routing\Redirector
+     */
     private function redirectBySlug($slug)
     {
         $slug = trim($slug);
