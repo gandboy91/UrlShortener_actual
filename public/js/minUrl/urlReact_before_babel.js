@@ -73,8 +73,8 @@ let UrlChecker =  React.createClass ({
     }, 
     render: function() { 
         return (
-            <div>
-                <div className='row mb-3'>
+            <div className='mb-3'>
+                <div className='row'>
                     <div className='col-sm-8'>
                         <input type='text' placeholder={urlInputLabel} id="UrlInput" className={`form-control ${this.state.validUrl}`} onChange={this.handleChangeUrl}></input>
                     </div>

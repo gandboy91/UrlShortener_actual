@@ -74,10 +74,10 @@
         render: function () {
             return React.createElement(
                 'div',
-                null,
+                { className: 'mb-3' },
                 React.createElement(
                     'div',
-                    { className: 'row mb-3' },
+                    { className: 'row' },
                     React.createElement(
                         'div',
                         { className: 'col-sm-8' },
