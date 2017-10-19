@@ -1,0 +1,31 @@
+#wrapper,html {
+background-color: #d6d9e2;
+}
+h1 {color:#28a745;}
+div {padding-left:0!important;}
+input,select,button {border-radius: 5px; padding: 5px;}
+#Shorten {
+    background-color:#67DB8C;
+    border: 2px solid #02BA3C;
+    font: bold 18px verdana;
+} 
+#Shorten:hover {
+    background-color:#6BBAFF;
+}
+.invalid-feedback {
+    display: block;
+}
+.message, .msg {
+    font: bold 16px verdana; 
+    padding:10px 0 0 30px;
+}
+.UrlInput {
+    margin-bottom: 20px; font: bold 16px verdana; 
+    width:80%;
+}
+.UrlOutput {
+    margin-top: 20px; 
+    font: bold 16px verdana; 
+    background-color: #82FF0F;
+    min-width: 300px;
+}

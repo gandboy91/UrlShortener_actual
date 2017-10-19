@@ -24,7 +24,7 @@ class UrlShortenerController extends Controller
     public function main(Request $request)
     {
         if ($slug = $request->slug)
-            return $this->redirectBySlug(''.$slug);
+     		return $this->redirectBySlug(''.$slug);
         return view('UrlShortener.main');
     }
 
