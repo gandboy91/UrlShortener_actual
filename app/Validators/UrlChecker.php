@@ -15,11 +15,19 @@ class UrlChecker
      */
     private static $regexpForUrl = '/^(https?:\/\/)?([\w\.]+)\.([a-z]{2,6}\.?)(\/[\w\.,-?\[\]=&;#%]*)*\/?$/';  
     /**
-     * @var array error list
+     * @var array slug error list
      */
-    private static $errorDescription = [ 
+    private static $slugErrorDescription = [ 
         400 => 'Недопустимые символы в кратком url',
         410 => 'Не найдено соответствия для этого краткого url' ];
+    /**
+     * @var array url error list
+     */
+    private static $urlErrorDescription = [ 
+        400 => 'Некорректный Url.',
+        410 => 'Данный Url не активен.',
+        411 => 'Введите Url.',
+        500 => 'Ошибка записи в БД.' ];
 
     /**
      * extra checking url using regexp and max allowed length
@@ -61,12 +69,17 @@ class UrlChecker
     }
 
     /**
-     * returns description of asked error code
+     * returns description of asked slug error code
      * @param int $errorCode 
      * @return string 
      */
-    public static function getErrorDescription($errorCode)
+    public static function getSlugErrorDescription($errorCode)
     {
-        return self::$errorDescription[$errorCode]; 
+        return self::$slugErrorDescription[$errorCode]; 
+    }
+    
+    public static function getUrlErrorDescription($errorCode)
+    {
+        return self::$urlErrorDescription[$errorCode]; 
     }    
 }

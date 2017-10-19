@@ -1,44 +1,38 @@
-var CRSFTOKEN = document.getElementById('crsft').getAttribute('content');
-var REGEXP = /^(https?:\/\/)([\w\.]+)([\/]?.*)$/; 
-var STATUSCODE = {
-    200 : 'Успешно!',
-    400: 'Некорректный Url.',
-    410: 'Данный Url не активен.',
-    411: 'Введите Url.',
-    500: 'Ошибка записи в БД.'   
-};  
+;(function(){
+const crsfToken = document.getElementById('crsft').getAttribute('content');
+const regexp = /^(https?:\/\/)([\w\.]+)([\/]?.*)$/;
+const messages = {
+    'successMessage': 'Успешно!',
+    'emptyUrlMessage': 'Введите url!',
+    'incorrectUrl': 'Проверьте корректность введенного url!' };
 
-var UrlShortener = React.createClass ({
+let UrlShortener = React.createClass ({
     getInitialState: function () {
         return { shortUrl: '', message: '' };
     },
     urlSend: function(checkUrlResult) {
         this.setState({ shortUrl: '', message: '' });
-        var thisComponent = this;
+        let thisComponent = this;
         axios.post(
             'minUrl/new', 
             { 'longUrl': checkUrlResult['longUrl'] }, 
             {  headers: { 
                     'Content-Type':  'application/json',
-                    'X-CSRF-TOKEN':  CRSFTOKEN,
+                    'X-CSRF-TOKEN':  crsfToken,
                 }
         })
         .then(function (response) {
-            let statusCode = 200;
-            let message, shortUrl;
-            message = shortUrl = '';
-            let respdata = JSON.parse( response.request.response );
-            if (respdata['status']===200) {
-                shortUrl = respdata['shortUrl'];
-            } else {
-                statusCode = +respdata['status'];
-            }
-            message = STATUSCODE[statusCode];
-            thisComponent.setState({ message: message });
+            let shortUrl = '';
+            let respdata = JSON.parse(response.request.response);
+            shortUrl = respdata['shortUrl'];
+            thisComponent.setState({ message: messages['successMessage'] });
             thisComponent.setState({ shortUrl: shortUrl });
-        })
-        .catch(function (error) {
-        console.log(error);
+        }).catch(function (error) {
+            if(errorContainer = JSON.parse(error.response.request.response)) {
+                thisComponent.setState({ message: errorContainer['error'] });
+            } else {
+                console.log(error);
+            }
         });
     },           
     render: function() {
@@ -51,7 +45,7 @@ var UrlShortener = React.createClass ({
     }
 });
 
-var UrlChecker =  React.createClass ({
+let UrlChecker =  React.createClass ({
     getInitialState: function () {
         return { longUrlInput: '' };
     },
@@ -62,11 +56,11 @@ var UrlChecker =  React.createClass ({
         let longUrl = this.state.longUrlInput;
         let urlParts;
         if(longUrl.length===0) {
-            alert(STATUSCODE[411]); return 0;
+            alert(messages['emptyUrlMessage']); return 0;
         } else {
-            urlParts = REGEXP.exec(longUrl);
+            urlParts = regexp.exec(longUrl);
             if(+urlParts===0) {
-                alert(STATUSCODE[400]); return 0;
+                alert(messages['incorrectUrl']); return 0;
             }
             this.props.onCheckComplete({longUrl: longUrl});
         }           
@@ -85,7 +79,7 @@ var UrlChecker =  React.createClass ({
     }
 });
 
-var UrlResultContainer =  React.createClass({
+let UrlResultContainer =  React.createClass({
     render: function() {
         return (    
             <div>
@@ -97,3 +91,4 @@ var UrlResultContainer =  React.createClass({
 });
         
 ReactDOM.render(<UrlShortener />, document.getElementById('UrlShortener'));
+})();

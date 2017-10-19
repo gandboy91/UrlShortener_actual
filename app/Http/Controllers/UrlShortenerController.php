@@ -7,6 +7,7 @@ use App\Helpers\UrlHasher;
 use App\Validators\UrlChecker;
 use App\Services\ShortenerUrlManager;
 use Illuminate\Http\Request;
+use Response;
 use Validator;
 
 /**
@@ -29,33 +30,31 @@ class UrlShortenerController extends Controller
 
     /**
      * Adding new url to DB and returns slug for it
-     * @param ShortenerUrlManager $UrlManager 
-     * @return string - responce in json
+     * @param ShortenerUrlManager $urlManager 
+     * @return string - response in json
      */
-    public function addUrl(ShortenerUrlManager $UrlManager)
+    public function addUrl(ShortenerUrlManager $urlManager)
     {
-        $responce = array();
+        $response = array();
         $shortUrl = $hash = '';
-        $responceStatus = 200;
-        $validationStatus = $UrlManager->validateUrl();
-        if ($validationStatus === 200) {
-            $sanitizedUrl = $UrlManager->getSanitizedUrl();
-            $idOfUrl = $UrlManager->findIdByUrl($sanitizedUrl);
+        $responseStatus = $urlManager->validateUrl();
+        if ($responseStatus === 200) {
+            $sanitizedUrl = $urlManager->getSanitizedUrl();
+            $idOfUrl = $urlManager->findIdByUrl($sanitizedUrl);
             if ($idOfUrl!==0) {
                 $hash = UrlHasher::IdToHash($idOfUrl);
             } else {
-                if ($newUrlId = $UrlManager->SaveUrlAndReturnId($sanitizedUrl))
+                if ($newUrlId = $urlManager->saveUrlAndReturnId($sanitizedUrl))
                     $hash = UrlHasher::idToHash($newUrlId);
                 else 
-                    $responceStatus = 500; // DB write error    
+                    $responseStatus = 500; // DB write error    
             }
-            $shortUrl = url("$hash"); 
+            $shortUrl = url("$hash");
+            $response['shortUrl'] = $shortUrl; 
         } else {
-            $responceStatus = $validationStatus;
+            $response['error'] = UrlChecker::getUrlErrorDescription($responseStatus);
         }
-        $responce['status'] = $responceStatus;
-        $responce['shortUrl'] = $shortUrl;
-        return json_encode($responce);
+        return Response::json($response,$responseStatus);
     }
 
     /**
@@ -75,7 +74,7 @@ class UrlShortenerController extends Controller
             else
                 $statusCode = 410;
         }
-        $message = UrlChecker::getErrorDescription($statusCode);
+        $message = UrlChecker::getSlugErrorDescription($statusCode);
         return redirect()->route('UrlShortener/main')->with('message',$message);
     }
 };	
