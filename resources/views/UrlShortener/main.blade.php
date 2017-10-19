@@ -10,7 +10,6 @@
     <script src="{{ asset('js/minUrl/url.js') }}" defer></script>
     <script src="{{ asset('js/react/react.min.js') }}" defer></script>
     <script src="{{ asset('js/react/react-dom.min.js') }}" defer></script> 
-    <script src="{{ asset('js/react/browser.min.js') }}" defer></script>
     <script src="{{ asset('js/react/axios.min.js') }}" defer></script>     
     <style type="text/css">
         tr,th,td { border: 1px solid #BBBBBB; text-align: center;}
@@ -59,6 +58,6 @@
         </div>
     </div>
     <div class="col-sm-2"></div>    
-    <script src = "{{ asset('js/minUrl/urlReact.js') }}" defer type="text/babel" ></script>
+    <script src = "{{ asset('js/minUrl/urlReact.js') }}" defer ></script>
 </body>
 </html>
