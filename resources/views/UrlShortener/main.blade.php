@@ -6,8 +6,6 @@
     <meta id="crsft" name="csrf-token" content="{{ csrf_token() }}" />
     <title>my URL-shortener</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}" />
-    <script src="{{ asset('js/jquery.min.js') }}" defer></script> 
-    <script src="{{ asset('js/minUrl/url.js') }}" defer></script>
     <script src="{{ asset('js/react/react.min.js') }}" defer></script>
     <script src="{{ asset('js/react/react-dom.min.js') }}" defer></script> 
     <script src="{{ asset('js/react/axios.min.js') }}" defer></script>     
